@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 10px; background-color: #293241;">
+  <script>
+    let divsIndexes = [];
+    let clickedDivs = [];
+    const maxDivs = 100;
+    let div;
+
+    // Initializing and adding div elements in body.
+    for (let i = 0; i < maxDivs; i++) {
+      divsIndexes.push(i)
+      div = document.createElement('div');
+      div.setAttribute("id", i);
+      div.setAttribute("clicked", 0);
+      div.innerText = `div ${i}`;
+      div.style.height = '100px';
+      div.style.display = 'flex';
+      div.style.alignItems = 'center';
+      div.style.justifyContent = 'center';
+      div.style.borderRadius = '10px';
+      div.style.backgroundColor = '#3a475c';
+      div.style.color = '#fff';
+      div.addEventListener('click', function(event) { onClick (event.target) });
+      document.body.appendChild(div);
+    }
+
+    // Logic of moving elements.
+    function onClick(element) {
+      let elementId = Number(element.id);
+      let elementIndx = divsIndexes.indexOf(elementId);
+      let elementIsClicked = Number(element.attributes.clicked.value);
+
+      if (elementIndx !== 0 && elementIsClicked === 0) {
+        swapDivOnStart(element);
+
+        element.attributes.clicked.value = 1;
+
+        divsIndexes.splice(elementIndx, 1);
+        divsIndexes.unshift(elementId);
+        !clickedDivs.includes(elementId) && clickedDivs.unshift(elementId);
+      } else {
+        element.attributes.clicked.value = 0;
+
+        divsIndexes = divsIndexes.filter( function( el ) {
+          return !(clickedDivs.includes(el) && el !== elementId);
+        } );
+        divsIndexes.sort((a, b) => a - b);
+        clickedDivs.splice(clickedDivs.indexOf(elementId), 1);
+        divsIndexes.unshift(...clickedDivs);
+
+        let nextElementId = elementId + 1;
+        swapDivOnInitPos(element, document.getElementById(String(nextElementId)));
+      }
+    }
+
+    // Function setting clicked element to the first position of body.
+    function swapDivOnStart (elem) {
+      elem.parentNode.insertBefore(elem, elem.parentNode.firstChild);
+    };
+
+    // Function setting clicked element to the initial position of it.
+    function swapDivOnInitPos (elem, nextElem) {
+      elem.parentNode.insertBefore(elem, nextElem);
+    };
+  </script>
+</body>
+</html>
