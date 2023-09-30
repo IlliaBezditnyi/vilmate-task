@@ -54,8 +54,8 @@
         clickedDivs.splice(clickedDivs.indexOf(elementId), 1);
         divsIndexes.unshift(...clickedDivs);
 
-        let nextElementId = elementId + 1;
-        swapDivOnInitPos(element, document.getElementById(String(nextElementId)));
+        let nextElementIndex = divsIndexes.indexOf(elementId) + 1;
+        swapDivOnInitPos(element, document.getElementById(String(divsIndexes[nextElementIndex])));
       }
     }
 
